@@ -1,0 +1,47 @@
+//Design Code
+module left_shift(output reg out, input clk,in);
+  reg q1,q2,q3;
+  always@(posedge clk)
+    begin
+      q3<=in;
+      q2<=q3;
+      q1<=q2;
+      out<=q1;
+    end
+endmodule
+
+//Test Bench Code
+module test();
+  reg in,clk;
+  wire out;
+  left_shift dut(out,clk,in);
+  initial
+    begin
+      clk=1'b0;
+      forever #5 clk=~clk;
+    end
+  initial
+    begin
+      @(negedge clk) in=1'b1;
+      @(negedge clk) in=1'b0;
+      @(negedge clk) in=1'b1;
+      @(negedge clk) in=1'b0;
+      @(negedge clk) in=1'b1;
+      @(negedge clk) in=1'b0;
+      @(negedge clk) in=1'b1;
+      @(negedge clk) in=1'b0;
+      $finish;
+    end
+  initial
+    begin
+      $display("time,out,q1,q2,q3");
+      $monitor("%0t,%0b,%0b,%0b,%0b",$time,out,dut.q1,dut.q2,dut.q3);
+      $timeformat(-9,0,"ns",10);
+    end
+  initial
+    begin
+      $dumpfile("test.vcd");
+      $dumpvars(1);
+    end
+endmodule
+
